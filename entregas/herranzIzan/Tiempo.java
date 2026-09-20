@@ -7,4 +7,26 @@ public class Tiempo {
     private final int duracion;
     private final boolean extendido;
     private int minuto;
+
+    public Tiempo(int duracion, boolean extendido) {
+        this.duracion = duracion;
+        this.extendido = extendido;
+        this.minuto = 0;
+    }
+ 
+    public void avanzar() {
+        minuto++;
+    }
+ 
+    public int getMinuto() {
+        return minuto;
+    }
+ 
+    public int getDuracion() {
+        return duracion;
+    }
+ 
+    public boolean haTerminado() {
+        return minuto >= duracion;
+    }
 }
