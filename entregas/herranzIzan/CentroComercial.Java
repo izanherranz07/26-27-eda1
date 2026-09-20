@@ -31,4 +31,8 @@ public class CentroComercial {
     public boolean filaLlena() {
         return fila.tamano() >= MAX_POSICIONES;
     }
+
+    public boolean personaDesiste(Random rnd) {
+        return filaLlena() && rnd.nextDouble() < P_DESISTE;
+    }
 }
