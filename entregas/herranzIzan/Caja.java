@@ -22,5 +22,5 @@ public class Caja {
     public boolean seAbre(Random rnd) {
         return rnd.nextDouble() < P_APERTURA;
     }
-    
+
 }
