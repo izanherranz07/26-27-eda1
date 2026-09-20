@@ -47,4 +47,29 @@ public class Fila {
         personas.add(posicionConocido + 1, p);
     }
 
+    public Persona entregarCompras(int posicionDador, int posicionReceptor) {
+        Persona dador = personas.get(posicionDador);
+        Persona receptor = personas.get(posicionReceptor);
+        receptor.recibirCompras(dador.getCompras());
+        personas.remove(posicionDador);
+        return dador;
+    }
+
+    public int retirarAburridos(int minutoActual, int umbralMinutos, double prob, Random rnd) {
+        int fuera = 0;
+        for (int i = personas.size() - 1; i >= 0; i--) {
+            Persona p = personas.get(i);
+            if (p.minutosEnFila(minutoActual) > umbralMinutos && rnd.nextDouble() < prob) {
+                personas.remove(i);
+                fuera++;
+            }
+        }
+        return fuera;
+    }
+ 
+    @Override
+    public String toString() {
+        return personas.toString();
+    }
+
 }
