@@ -107,4 +107,40 @@ public class Simulacion {
                 throw new IllegalArgumentException("Acción desconocida: " + accion);
         }
     }
+
+    private boolean puedeIncorporarse(boolean reglasNuevas) {
+        if (reglasNuevas && cccf.personaDesiste(rnd)) {
+            desistieron++;
+            return false;
+        }
+        return true;
+    }
+ 
+    private Persona nuevaPersona(int minuto, boolean preferente) {
+        return new Persona(siguienteId++, minuto, preferente);
+    }
+ 
+    /** Fisher-Yates. */
+    private void barajar(int[] v) {
+        for (int i = v.length - 1; i > 0; i--) {
+            int j = rnd.nextInt(i + 1);
+            int tmp = v[i];
+            v[i] = v[j];
+            v[j] = tmp;
+        }
+    }
+ 
+    public void imprimirResumen(boolean extendido) {
+        System.out.println("---- Resumen ----");
+        System.out.println("Atendidas:     " + cccf.getCaja().getAtendidas());
+        System.out.println("En fila:       " + cccf.getFila().tamano());
+        if (extendido) {
+            System.out.println("Se aburrieron: " + aburridos);
+            System.out.println("Desistieron:   " + desistieron);
+            System.out.println("Preferentes:   " + preferentes);
+            System.out.println("Colados:       " + colados);
+            System.out.println("Entregas:      " + entregas);
+            System.out.println("Avisos:        " + avisos);
+        }
+    }
 }
