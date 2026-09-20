@@ -18,4 +18,9 @@ public class Caja {
     public int getAtendidas() {
         return atendidas;
     }
+    
+    public boolean seAbre(Random rnd) {
+        return rnd.nextDouble() < P_APERTURA;
+    }
+    
 }
