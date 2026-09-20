@@ -30,6 +30,15 @@ public class Persona {
     public void recibirCompras(int cantidad) {
         this.compras += cantidad;
     }
+
+    public int minutosEnFila(int minutoActual) {
+        return minutoActual - minutoLlegada;
+    }
+ 
+    @Override
+    public String toString() {
+        return "P" + id + (preferente ? "*" : "");
+    }
 }
  
     
