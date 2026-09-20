@@ -4,4 +4,33 @@ import java.util.Random;
 
 public class Fila {
 
+    private final List<Persona> personas = new ArrayList<>();
+ 
+    public int tamano() {
+        return personas.size();
+    }
+ 
+    public boolean estaVacia() {
+        return personas.isEmpty();
+    }
+ 
+    public int longitudMetros() {
+        return personas.size();
+    }
+ 
+    public Persona get(int posicion) {
+        return personas.get(posicion);
+    }
+ 
+    public void agregarAlFinal(Persona p) {
+        personas.add(p);
+    }
+ 
+    public Persona atenderFrente() {
+        if (personas.isEmpty()) {
+            return null;
+        }
+        return personas.remove(0);
+    }
+
 }
