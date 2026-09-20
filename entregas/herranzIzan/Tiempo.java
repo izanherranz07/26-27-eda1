@@ -29,4 +29,16 @@ public class Tiempo {
     public boolean haTerminado() {
         return minuto >= duracion;
     }
+
+    public boolean reglasNuevasActivas() {
+        return extendido && minuto >= MINUTO_INICIO_REGLAS;
+    }
+
+    public boolean tocaAburrimiento() {
+        return minuto % PERIODO_ABURRIMIENTO == 0;
+    }
+
+    public boolean tocaAviso() {
+        return minuto % PERIODO_AVISO == 0;
+    }
 }
