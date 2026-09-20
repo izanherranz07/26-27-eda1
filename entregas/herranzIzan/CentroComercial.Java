@@ -35,4 +35,13 @@ public class CentroComercial {
     public boolean personaDesiste(Random rnd) {
         return filaLlena() && rnd.nextDouble() < P_DESISTE;
     }
+    
+    public boolean debeAvisar() {
+        return fila.tamano() > UMBRAL_AVISO;
+    }
+ 
+    public String anuncio(int minuto) {
+        return "[min " + minuto + "] " + nombre
+                + " - Parlantes: \"pasen por esta caja en orden de fila\"";
+    }
 }
