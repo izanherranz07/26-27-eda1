@@ -23,4 +23,11 @@ public class Caja {
         return rnd.nextDouble() < P_APERTURA;
     }
 
+    public Persona atender(Fila fila) {
+        Persona p = fila.atenderFrente();
+        if (p != null) {
+            atendidas++;
+        }
+        return p;
+    }
 }
