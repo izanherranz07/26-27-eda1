@@ -51,4 +51,60 @@ public class Simulacion {
         }
         return longitudes;
     }
+
+    private int[] accionesDelMinuto(boolean reglasNuevas) {
+        if (!reglasNuevas) {
+            return new int[] {LLEGADA, CAJA};
+        }
+        int[] acciones = tiempo.tocaAburrimiento()
+                ? new int[] {LLEGADA, CAJA, PREFERENTE, COLADO, ENTREGA, ABURRIMIENTO}
+                : new int[] {LLEGADA, CAJA, PREFERENTE, COLADO, ENTREGA};
+        barajar(acciones); // "en cualquier orden"
+        return acciones;
+    }
+ 
+    private void ejecutarAccion(int accion, int minuto, boolean reglasNuevas) {
+        Fila fila = cccf.getFila();
+        switch (accion) {
+            case LLEGADA:
+                if (rnd.nextDouble() < P_LLEGADA && puedeIncorporarse(reglasNuevas)) {
+                    fila.agregarAlFinal(nuevaPersona(minuto, false));
+                }
+                break;
+            case CAJA:
+                if (cccf.getCaja().seAbre(rnd)) {
+                    cccf.getCaja().atender(fila);
+                }
+                break;
+            case PREFERENTE:
+                if (rnd.nextDouble() < P_PREFERENTE && puedeIncorporarse(reglasNuevas)) {
+                    fila.agregarPreferente(nuevaPersona(minuto, true));
+                    preferentes++;
+                }
+                break;
+            case COLADO:
+                if (!fila.estaVacia() && rnd.nextDouble() < P_COLADO && puedeIncorporarse(reglasNuevas)) {
+                    int conocido = rnd.nextInt(fila.tamano());
+                    fila.colarDetras(nuevaPersona(minuto, false), conocido);
+                    colados++;
+                }
+                break;
+            case ENTREGA:
+                if (fila.tamano() >= 2 && rnd.nextDouble() < P_ENTREGA) {
+                    int dador = rnd.nextInt(fila.tamano());
+                    int receptor = rnd.nextInt(fila.tamano() - 1);
+                    if (receptor >= dador) {
+                        receptor++; // garantiza receptor != dador
+                    }
+                    fila.entregarCompras(dador, receptor);
+                    entregas++;
+                }
+                break;
+            case ABURRIMIENTO:
+                aburridos += fila.retirarAburridos(minuto, UMBRAL_ABURRIMIENTO, P_ABURRIRSE, rnd);
+                break;
+            default:
+                throw new IllegalArgumentException("Acción desconocida: " + accion);
+        }
+    }
 }
