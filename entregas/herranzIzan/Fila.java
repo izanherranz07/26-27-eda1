@@ -1,75 +1,66 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 public class Fila {
 
-    private final List<Persona> personas = new ArrayList<>();
- 
+    private static final int CAPACIDAD_INICIAL = 16;
+
+    private Persona[] personas = new Persona[CAPACIDAD_INICIAL];
+    private int cantidad = 0;
+
     public int tamano() {
-        return personas.size();
+        return cantidad;
     }
- 
+
     public boolean estaVacia() {
-        return personas.isEmpty();
+        return cantidad == 0;
     }
- 
+
     public int longitudMetros() {
-        return personas.size();
+        return cantidad;
     }
- 
+
     public Persona get(int posicion) {
-        return personas.get(posicion);
+        if (posicion < 0 || posicion >= cantidad) {
+            throw new IndexOutOfBoundsException("Posición inválida: " + posicion);
+        }
+        return personas[posicion];
     }
- 
+
     public void agregarAlFinal(Persona p) {
-        personas.add(p);
+        insertar(cantidad, p);
     }
- 
+
     public Persona atenderFrente() {
-        if (personas.isEmpty()) {
+        if (estaVacia()) {
             return null;
         }
-        return personas.remove(0);
+        return eliminar(0);
     }
 
-    public void agregarPreferente(Persona p) {
-        int ultimoPreferente = -1;
-        for (int i = 0; i < personas.size(); i++) {
-            if (personas.get(i).isPreferente()) {
-                ultimoPreferente = i;
+    private void asegurarCapacidad() {
+        if (cantidad == personas.length) {
+            Persona[] nuevo = new Persona[personas.length * 2];
+            for (int i = 0; i < cantidad; i++) {
+                nuevo[i] = personas[i];
             }
+            personas = nuevo;
         }
-        personas.add(ultimoPreferente + 1, p);
-    }
- 
-    public void colarDetras(Persona p, int posicionConocido) {
-        personas.add(posicionConocido + 1, p);
     }
 
-    public Persona entregarCompras(int posicionDador, int posicionReceptor) {
-        Persona dador = personas.get(posicionDador);
-        Persona receptor = personas.get(posicionReceptor);
-        receptor.recibirCompras(dador.getCompras());
-        personas.remove(posicionDador);
-        return dador;
-    }
-
-    public int retirarAburridos(int minutoActual, int umbralMinutos, double prob, Random rnd) {
-        int fuera = 0;
-        for (int i = personas.size() - 1; i >= 0; i--) {
-            Persona p = personas.get(i);
-            if (p.minutosEnFila(minutoActual) > umbralMinutos && rnd.nextDouble() < prob) {
-                personas.remove(i);
-                fuera++;
-            }
+    private void insertar(int posicion, Persona p) {
+        asegurarCapacidad();
+        for (int i = cantidad; i > posicion; i--) {
+            personas[i] = personas[i - 1];
         }
-        return fuera;
-    }
- 
-    @Override
-    public String toString() {
-        return personas.toString();
+        personas[posicion] = p;
+        cantidad++;
     }
 
+    private Persona eliminar(int posicion) {
+        Persona eliminada = personas[posicion];
+        for (int i = posicion; i < cantidad - 1; i++) {
+            personas[i] = personas[i + 1];
+        }
+        personas[cantidad - 1] = null;
+        cantidad--;
+        return eliminada;
+    }
 }
