@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Fila {
 
     private static final int CAPACIDAD_INICIAL = 16;
@@ -63,4 +65,50 @@ public class Fila {
         cantidad--;
         return eliminada;
     }
+
+    public void agregarPreferente(Persona p) {
+        int ultimoPreferente = -1;
+        for (int i = 0; i < cantidad; i++) {
+            if (personas[i].isPreferente()) {
+                ultimoPreferente = i;
+            }
+        }
+        insertar(ultimoPreferente + 1, p);
+    }
+
+    public void colarDetras(Persona p, int posicionConocido) {
+        insertar(posicionConocido + 1, p);
+    }
+
+    public Persona entregarCompras(int posicionDador, int posicionReceptor) {
+        Persona dador = personas[posicionDador];
+        Persona receptor = personas[posicionReceptor];
+        receptor.recibirCompras(dador.getCompras());
+        return eliminar(posicionDador);
+    }
+
+    public int retirarAburridos(int minutoActual, int umbralMinutos, double prob, Random rnd) {
+        int fuera = 0;
+        for (int i = cantidad - 1; i >= 0; i--) {
+            Persona p = personas[i];
+            if (p.minutosEnFila(minutoActual) > umbralMinutos && rnd.nextDouble() < prob) {
+                eliminar(i);
+                fuera++;
+            }
+        }
+        return fuera;
+    }
+
+    @Override
+    public String toString() {
+        String texto = "[";
+        for (int i = 0; i < cantidad; i++) {
+            texto += personas[i];
+            if (i < cantidad - 1) {
+                texto += ", ";
+            }
+        }
+        return texto + "]";
+    }
+
 }
