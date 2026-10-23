@@ -249,7 +249,9 @@ public class Eleccion {
         marcador[indiceDe(opcionAnotada)]++;
         votosContados++;
 
-        System.out.println("Secretario anota: " + opcionAnotada);
+        System.out.println("\nSecretario anota: " + opcionAnotada);
+
+        imprimirMarcador();
 
         if (!opcionReal.equals(opcionAnotada)) {
             errorAnotado = opcionAnotada;
@@ -269,23 +271,38 @@ public class Eleccion {
         marcador[indiceDe(errorAnotado)]--;
         marcador[indiceDe(errorReal)]++;
 
-        System.out.println("CORRECCION: " + errorAnotado
+        System.out.println("\nCORRECCION: " + errorAnotado
                 + " -> " + errorReal);
 
         errorAnotado = null;
         errorReal = null;
+
+        imprimirMarcador();
     }
 
     public void imprimirMarcador() {
-        for (int i = 0; i < boleta.length; i++) {
-            System.out.println(boleta[i] + ": "
-                    + marcador[i] + " votos");
-        }
+        System.out.println("--- PIZARRA ELECTORAL ---");
 
-        System.out.println("BLANCO: "
-                + marcador[boleta.length]);
-        System.out.println("NULO: "
-                + marcador[boleta.length + 1]);
+        for (int i = 0; i < marcador.length; i++) {
+
+            String nombre;
+
+            if (i < boleta.length) {
+                nombre = boleta[i];
+            } else if (i == boleta.length) {
+                nombre = "BLANCO";
+            } else {
+                nombre = "NULO";
+            }
+
+            System.out.print(nombre + ": ");
+
+            for (int j = 0; j < marcador[i]; j++) {
+                System.out.print("| ");
+            }
+
+            System.out.println("(" + marcador[i] + " votos)");
+        }
     }
 
     public void proclamar() {
@@ -315,8 +332,10 @@ public class Eleccion {
             }
         }
 
-        System.out.println("=== PROCLAMACION ===");
+        System.out.println("\n=== PROCLAMACION ===");
+
         imprimirMarcador();
+
         System.out.println("Votos emitidos: " + votosContados);
         System.out.println("Abstenciones del censo: "
                 + (censo.tamano() - votosAceptados));
@@ -340,3 +359,4 @@ public class Eleccion {
     }
 
 }
+
