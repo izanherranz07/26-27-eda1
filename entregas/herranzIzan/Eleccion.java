@@ -188,4 +188,155 @@ public class Eleccion {
         System.out.println("Urna cerrada y verificada.");
     }
 
+    private int indiceDe(String opcion) {
+        if (opcion == null) {
+            return boleta.length + 1;
+        }
+
+        if (opcion.equals("BLANCO")) {
+            return boleta.length;
+        }
+
+        if (opcion.equals("NULO")) {
+            return boleta.length + 1;
+        }
+
+        for (int i = 0; i < boleta.length; i++) {
+            if (boleta[i].equals(opcion)) {
+                return i;
+            }
+        }
+
+        return boleta.length + 1;
+    }
+
+    private String normalizarOpcion(String opcion) {
+        int indice = indiceDe(opcion);
+
+        if (indice == boleta.length) {
+            return "BLANCO";
+        }
+
+        if (indice == boleta.length + 1) {
+            return "NULO";
+        }
+
+        return boleta[indice];
+    }
+
+    public void iniciarEscrutinio() {
+        if (!urnaCerrada || escrutinioIniciado) {
+            throw new IllegalStateException(
+                "No se puede iniciar el escrutinio."
+            );
+        }
+
+        escrutinioIniciado = true;
+        System.out.println("Comienza el recuento de papeletas.");
+    }
+
+    public void contarSiguiente(String anotacion) {
+        if (!escrutinioIniciado || urna.estaVacia()
+                || errorAnotado != null) {
+            throw new IllegalStateException(
+                "No se puede contar otra papeleta."
+            );
+        }
+
+        String opcionReal = normalizarOpcion(urna.desapilar());
+        String opcionAnotada = normalizarOpcion(anotacion);
+
+        marcador[indiceDe(opcionAnotada)]++;
+        votosContados++;
+
+        System.out.println("Secretario anota: " + opcionAnotada);
+
+        if (!opcionReal.equals(opcionAnotada)) {
+            errorAnotado = opcionAnotada;
+            errorReal = opcionReal;
+            System.out.println(
+                "ERROR: anotacion pendiente de corregir."
+            );
+        }
+    }
+
+    public void corregirAnotacion() {
+        if (errorAnotado == null) {
+            System.out.println("No hay errores pendientes.");
+            return;
+        }
+
+        marcador[indiceDe(errorAnotado)]--;
+        marcador[indiceDe(errorReal)]++;
+
+        System.out.println("CORRECCION: " + errorAnotado
+                + " -> " + errorReal);
+
+        errorAnotado = null;
+        errorReal = null;
+    }
+
+    public void imprimirMarcador() {
+        for (int i = 0; i < boleta.length; i++) {
+            System.out.println(boleta[i] + ": "
+                    + marcador[i] + " votos");
+        }
+
+        System.out.println("BLANCO: "
+                + marcador[boleta.length]);
+        System.out.println("NULO: "
+                + marcador[boleta.length + 1]);
+    }
+
+    public void proclamar() {
+        if (!escrutinioIniciado || !urna.estaVacia() ||
+            votosContados != votosAceptados || errorAnotado != null) {
+            throw new IllegalStateException(
+                "El escrutinio no ha terminado correctamente."
+            );
+        }
+
+        if (votosContados == 0) {
+            System.out.println("No se han emitido votos.");
+            return;
+        }
+
+        int maximo = 0;
+        int empatados = 0;
+        String ganador = "";
+
+        for (int i = 0; i < boleta.length; i++) {
+            if (marcador[i] > maximo) {
+                maximo = marcador[i];
+                ganador = boleta[i];
+                empatados = 1;
+            } else if (marcador[i] == maximo && maximo > 0) {
+                empatados++;
+            }
+        }
+
+        System.out.println("=== PROCLAMACION ===");
+        imprimirMarcador();
+        System.out.println("Votos emitidos: " + votosContados);
+        System.out.println("Abstenciones del censo: "
+                + (censo.tamano() - votosAceptados));
+
+        if (maximo == 0) {
+            System.out.println(
+                "No hay votos validos para candidaturas."
+            );
+        } else if (empatados > 1) {
+            System.out.println("EMPATE entre:");
+
+            for (int i = 0; i < boleta.length; i++) {
+                if (marcador[i] == maximo) {
+                    System.out.println("- " + boleta[i]);
+                }
+            }
+        } else {
+            System.out.println("Ganador: " + ganador
+                    + " con " + maximo + " votos.");
+        }
+    }
+
 }
