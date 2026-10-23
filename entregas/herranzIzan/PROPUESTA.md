@@ -62,3 +62,47 @@ También organizo las estructuras y sus operaciones en clases independientes, re
 - Si varios candidatos comparten el máximo de votos, se declara empate.
 - Los identificadores D1, D2, etc., representan DNI ficticios.
 
+## 4. Comprobaciones de seguridad
+
+Antes de aceptar una papeleta se comprueba:
+
+1. Que la votación esté abierta.
+2. Que el DNI pertenezca al censo.
+3. Que el alumno esté presente.
+4. Que el DNI no figure entre los votantes registrados.
+5. Que no se haya alcanzado el número máximo de papeletas permitido.
+
+Cuando se acepta el voto, se deposita únicamente la opción elegida y el DNI se registra por separado.
+
+Al cerrar la urna se comprueba que el número de papeletas coincida con los depósitos aceptados y los DNI registrados, y que no supere el censo.
+
+La proclamación solo se permite cuando todas las papeletas han sido contadas y no quedan errores de anotación pendientes.
+
+Estas comprobaciones reducen irregularidades en la simulación, pero no convierten el programa en un sistema electoral real ni garantizan anonimato absoluto.
+
+## 5. Limitaciones generales
+
+El programa está diseñado para una elección pequeña de clase y utiliza estructuras implementadas manualmente, sin java.util.
+
+Las búsquedas en las listas enlazadas son lineales.
+
+El censo y la asistencia se verifican mediante identificadores ficticios, sin autenticar documentos de identidad reales.
+
+La cola representa el orden de atención, pero no impide que un alumno se incorpore varias veces. El segundo depósito sí se rechaza.
+
+La urna utiliza una pila LIFO, que no mezcla las papeletas y puede comprometer el secreto del voto si se conoce su orden de entrada.
+
+La clase Ejemplo conoce el orden de los votos porque construye una simulación determinista. Esto permite verificar el recuento, pero no reproduce plenamente la privacidad de una votación real.
+
+El sistema comprueba la cantidad de papeletas, pero no tiene un mecanismo externo de auditoría que garantice que ninguna haya sido sustituida.
+
+El secretario puede cometer una anotación errónea. El programa la detecta al comparar la anotación con la papeleta extraída y permite corregirla.
+
+## 6. Conclusión
+
+La nueva propuesta utiliza ocho estructuras de datos principales, cada una asociada a una necesidad del proceso electoral.
+
+He mantenido las decisiones que seguían siendo adecuadas y he modificado aquellas que no representaban correctamente la asistencia, la votación o el escrutinio.
+
+La finalidad es simular una elección coherente con las estructuras de datos estudiadas en clase, haciendo explícitas tanto las decisiones de diseño como sus limitaciones.
+
