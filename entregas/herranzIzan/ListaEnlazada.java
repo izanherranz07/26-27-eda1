@@ -34,7 +34,7 @@ public class ListaEnlazada {
     }
 
     return false;
-}
+    }
 
     public boolean eliminar(String dato) {
     if (cabeza == null) {
@@ -73,4 +73,48 @@ public class ListaEnlazada {
 
         return false;
     }
+
+    
+    public String obtener(int indice) {
+    if (indice < 0 || indice >= cantidad) {
+        throw new IndexOutOfBoundsException(
+            "Indice invalido: " + indice
+        );
+    }
+
+    Nodo actual = cabeza;
+
+    for (int i = 0; i < indice; i++) {
+        actual = actual.siguiente;
+    }
+
+    return actual.dato;
+    }
+
+    public int tamano() {
+    return cantidad;
+    }
+
+    public boolean estaVacia() {
+    return cantidad == 0;
+    }
+
+    @Override
+    public String toString() {
+    StringBuilder texto = new StringBuilder("[");
+    Nodo actual = cabeza;
+
+    while (actual != null) {
+        texto.append(actual.dato);
+
+        if (actual.siguiente != null) {
+            texto.append(", ");
+        }
+
+        actual = actual.siguiente;
+    }
+
+    return texto.append("]").toString();
+    }
+
 }
