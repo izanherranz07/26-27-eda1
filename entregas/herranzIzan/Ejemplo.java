@@ -81,5 +81,26 @@ public class Ejemplo {
         System.out.println("\n=== CIERRE DE VOTACION ===");
 
         eleccion.cerrarUrna();
+
+        System.out.println("\n=== ESCRUTINIO ===");
+
+        eleccion.iniciarEscrutinio();
+        eleccion.contarSiguiente("Hector San Miguel");
+
+        System.out.println("\n=== CORRECCION DEL ERROR ===");
+
+        eleccion.corregirAnotacion();
+
+        eleccion.contarSiguiente("Hector San Miguel");
+        eleccion.contarSiguiente("NULO");
+        eleccion.contarSiguiente("BLANCO");
+        eleccion.contarSiguiente("Adriana Aguilar");
+        eleccion.contarSiguiente("Hector San Miguel");
+
+        System.out.println("\n=== RESULTADO FINAL ===");
+
+        eleccion.proclamar();
     }
+
+    
 }
