@@ -12,3 +12,53 @@
 | Orden de llegada | Cola de String | Los alumnos deben ser atendidos en el mismo orden en que llegan a la urna, aunque varios estén esperando simultáneamente. | Pila. Atendería primero al último alumno que llega. | La cola no representa tiempos reales de espera y permite que un DNI se encole más de una vez, aunque el doble voto se rechaza al atenderlo. |
 | Urna electoral | Pila de String | Mantengo la idea original de apilar papeletas y extraerlas posteriormente, utilizando las operaciones de pila estudiadas en clase. | Cola. Conservaría el orden de entrada durante el recuento, algo innecesario para calcular los resultados. | Una urna real no funciona necesariamente como una pila. El orden LIFO puede facilitar inferencias sobre los votos si se conoce el orden de depósito. |
 | Recuento de votos | int[] | Tras cerrar la boleta conocemos el número de candidaturas y necesitamos un contador fijo para cada una, más blanco y nulo. | Lista enlazada de enteros. Añadiría nodos y recorridos sin necesitar un tamaño variable. | Para localizar una candidatura por nombre hay que recorrer la boleta, con coste O(n). |
+
+## 2. Cambios respecto a mi propuesta original
+
+### Decisiones que mantengo
+
+Mantengo el uso de un array para las candidaturas definitivas porque, una vez cerrada la boleta, no deben modificarse durante la elección.
+
+También mantengo una lista enlazada para gestionar alumnos, aunque ahora separo el censo de los presentes para distinguir quién tiene derecho a votar de quién está realmente en el aula.
+
+Mantengo la idea de utilizar una pila para las papeletas, pero reconozco que reproduce una simplificación del proceso y no el comportamiento exacto de una urna real.
+
+El recuento sigue utilizando un array de enteros. Es adecuado porque el número de opciones ya es conocido y permanece fijo.
+
+### Decisiones que cambio
+
+En mi propuesta original, el profesor recorría los pasillos y recogía los votos. Ahora cada alumno se acerca a la urna y se incorpora a una cola.
+
+También separo las candidaturas propuestas de las definitivas. Primero utilizo una lista enlazada para permitir retiradas y rechazos. Después construyo la boleta fija.
+
+Antes consideraba la abstención una opción de la papeleta. Ahora la abstención significa no votar. Los votos en blanco y nulos se cuentan por separado.
+
+Inicialmente quería incluir el DNI dentro de cada papeleta para detectar duplicados. He cambiado esta decisión porque permitiría relacionar a cada persona con su voto.
+
+Ahora compruebo el DNI antes del depósito y lo registro independientemente de la opción elegida.
+
+También cambio la invalidación de toda la elección ante un doble voto. En esta simulación se rechaza únicamente el intento irregular para poder continuar el proceso.
+
+Por último, el recuento ya no se actualiza al depositar las papeletas. El secretario debe extraerlas de la urna y anotarlas posteriormente.
+
+### Decisiones adoptadas de los ejemplos
+
+Adopto el uso explícito de una cola para organizar la llegada de los alumnos a la urna, porque representa mejor el nuevo procedimiento que el recorrido del profesor por los pasillos.
+
+También organizo las estructuras y sus operaciones en clases independientes, reutilizando la clase Nodo para la lista, la pila y la cola.
+
+## 3. Supuestos del programa
+
+- El censo se prepara antes de cerrar la boleta.
+- Solamente pueden votar alumnos incluidos en el censo y presentes en el aula.
+- Los alumnos que llegan tarde pueden votar si la urna sigue abierta.
+- Los alumnos que se marchan pierden la posibilidad de votar mientras estén ausentes.
+- Cada DNI puede depositar como máximo una papeleta.
+- Las candidaturas solamente pueden retirarse o rechazarse antes del cierre.
+- Una papeleta en blanco no contiene ninguna candidatura elegida.
+- Una papeleta nula no cumple las condiciones establecidas para ser válida.
+- La abstención consiste en no depositar una papeleta.
+- Las anotaciones equivocadas se corrigen antes de continuar el escrutinio.
+- Si varios candidatos comparten el máximo de votos, se declara empate.
+- Los identificadores D1, D2, etc., representan DNI ficticios.
+
