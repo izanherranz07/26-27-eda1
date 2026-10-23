@@ -14,4 +14,38 @@ public class Pila {
         cima = nuevo;
         cantidad++;
     }
+
+    
+    public String desapilar() {
+    if (cima == null) {
+        throw new IllegalStateException(
+            "La pila esta vacia."
+        );
+    }
+
+    String dato = cima.dato;
+    cima = cima.siguiente;
+    cantidad--;
+
+    return dato;
+    }
+
+    public String verCima() {
+    if (cima == null) {
+        throw new IllegalStateException(
+            "La pila esta vacia."
+        );
+    }
+
+    return cima.dato;
+    }
+
+    public boolean estaVacia() {
+    return cima == null;
+    }
+
+    public int tamano() {
+    return cantidad;
+    }
+
 }
