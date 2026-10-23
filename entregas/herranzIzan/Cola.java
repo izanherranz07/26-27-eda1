@@ -22,4 +22,41 @@ public class Cola {
         ultimo = nuevo;
         cantidad++;
     }
+
+    public String desencolar() {
+    if (frente == null) {
+        throw new IllegalStateException(
+            "La cola esta vacia."
+        );
+    }
+
+    String dato = frente.dato;
+    frente = frente.siguiente;
+
+    if (frente == null) {
+        ultimo = null;
+    }
+
+    cantidad--;
+    return dato;
+    }
+
+    public String verFrente() {
+    if (frente == null) {
+        throw new IllegalStateException(
+            "La cola esta vacia."
+        );
+    }
+
+    return frente.dato;
+    }
+
+    public boolean estaVacia() {
+    return frente == null;
+    }
+
+    public int tamano() {
+    return cantidad;
+    }
+
 }
