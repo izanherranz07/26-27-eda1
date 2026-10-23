@@ -116,4 +116,76 @@ public class Eleccion {
             System.out.println("No se puede registrar la salida.");
         }
     }
+
+    public void ponerseEnCola(Alumno alumno) {
+        if (!boletaCerrada || urnaCerrada) {
+            System.out.println("La votacion no esta abierta.");
+            return;
+        }
+
+        colaEntrega.encolar(alumno.getDni());
+        System.out.println(alumno.getNombre() + " entra en la cola.");
+    }
+
+    public void atenderSiguiente(String opcion) {
+        if (!boletaCerrada || urnaCerrada || colaEntrega.estaVacia()) {
+            System.out.println("No se puede atender al votante.");
+            return;
+        }
+
+        String dni = colaEntrega.desencolar();
+
+        if (!censo.contiene(dni)) {
+            System.out.println("RECHAZADO: no pertenece al censo.");
+            return;
+        }
+
+        if (!presentes.contiene(dni)) {
+            System.out.println("RECHAZADO: no esta presente.");
+            return;
+        }
+
+        if (votantesRegistrados.contiene(dni)) {
+            System.out.println("RECHAZADO: intento de doble voto.");
+            return;
+        }
+
+        if (votosAceptados >= censo.tamano()) {
+            System.out.println("RECHAZADO: limite de votos alcanzado.");
+            return;
+        }
+
+        if (opcion == null) {
+            System.out.println("RECHAZADO: papeleta inexistente.");
+            return;
+        }
+
+        Papeleta papeleta = new Papeleta(opcion);
+
+        urna.apilar(papeleta.getOpcion());
+        votantesRegistrados.agregarFinal(dni);
+        votosAceptados++;
+
+        System.out.println("Papeleta depositada correctamente.");
+    }
+
+    public void cerrarUrna() {
+        if (!boletaCerrada || urnaCerrada || !colaEntrega.estaVacia()) {
+            System.out.println("No se puede cerrar la urna.");
+            return;
+        }
+
+        urnaCerrada = true;
+
+        if (urna.tamano() != votosAceptados ||
+            votosAceptados != votantesRegistrados.tamano() ||
+            votosAceptados > censo.tamano()) {
+            throw new IllegalStateException(
+                "IRREGULARIDAD: numero de papeletas incorrecto."
+            );
+        }
+
+        System.out.println("Urna cerrada y verificada.");
+    }
+
 }
